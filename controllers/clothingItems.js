@@ -1,35 +1,32 @@
-const mongoose = require("mongoose");
+const clothingItem = require("../models/clothingItem");
 
-const clothingItemSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 30,
-  },
-  weather: {
-    type: String,
-    required: true,
-    enum: ["hot", "warm", "cold"],
-  },
-  imageUrl: {
-    type: String,
-    required: true,
-  },
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  likes: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "User",
-    default: [],
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+const getItems = (req, res) => {
+  clothingItem
+    .find({})
+    .then((clothingItems) => res.send(clothingItems))
+    .catch((err) => res.status(500).send(err));
+};
 
-module.exports = mongoose.model("ClothingItem", clothingItemSchema);
+const createItem = (req, res) => {
+  const { name, weather, imageUrl, owner } = req.body;
+
+  clothingItem
+    .create({ name, weather, imageUrl, owner })
+    .then((clothingItem) => res.send(clothingItem))
+    .catch((err) => res.status(500).send(err));
+};
+
+const deleteItem = (req, res) => {
+  const { itemId } = req.params;
+
+  clothingItem
+    .findByIdAndDelete(itemId)
+    .then((clothingItem) => res.send(clothingItem))
+    .catch((err) => res.status(500).send(err));
+};
+
+module.exports = {
+  getItems,
+  createItem,
+  deleteItem,
+};

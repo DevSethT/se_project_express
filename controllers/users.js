@@ -1,16 +1,29 @@
-const mongoose = require("mongoose");
+const User = require("../models/user");
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 30,
-  },
-  avatar: {
-    type: String,
-    required: true,
-  },
-});
+const getUsers = (req, res) => {
+  User.find({})
+    .then((users) => res.send(users))
+    .catch((err) => res.status(500).send(err));
+};
 
-module.exports = mongoose.model("User", userSchema);
+const getUser = (req, res) => {
+  const { userId } = req.params;
+
+  User.findById(userId)
+    .then((user) => res.send(user))
+    .catch((err) => res.status(500).send(err));
+};
+
+const createUser = (req, res) => {
+  const { name, avatar } = req.body;
+
+  User.create({ name, avatar })
+    .then((user) => res.send(user))
+    .catch((err) => res.status(500).send(err));
+};
+
+module.exports = {
+  getUsers,
+  getUser,
+  createUser,
+};
