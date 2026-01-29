@@ -19,7 +19,7 @@ const getUser = (req, res) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === "CastError") {
-        return res.status(BAD_REQUEST).send({ message: "Invalid user Id" });
+        return res.status(BAD_REQUEST).send({ message: "Invalid user ID" });
       }
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "User not found" });
