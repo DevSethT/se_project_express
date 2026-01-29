@@ -1,8 +1,12 @@
 const mongoose = require("mongoose");
+
 const express = require("express");
-const app = express();
+
 const userRouter = require("./routes/users");
+
 const clothingRouter = require("./routes/clothingItems");
+
+const app = express();
 
 // has to stay above routes
 app.use(express.json());
