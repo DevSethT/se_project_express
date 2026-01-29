@@ -1,14 +1,12 @@
+const express = require("express");
 const mongoose = require("mongoose");
 
-const express = require("express");
-
 const userRouter = require("./routes/users");
-
 const clothingRouter = require("./routes/clothingItems");
 
 const app = express();
+const { PORT = 3001 } = process.env;
 
-// has to stay above routes
 app.use(express.json());
 
 app.use((req, res, next) => {
@@ -20,19 +18,11 @@ app.use((req, res, next) => {
 
 app.use("/users", userRouter);
 app.use("/items", clothingRouter);
+
 app.use("/*", (req, res) => {
   res.status(404).send({ message: "Requested resource not found" });
 });
 
-mongoose
-  .connect("mongodb://127.0.0.1:27017/wtwr_db")
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch(console.error);
+mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db").catch(() => {});
 
-const { PORT = 3001 } = process.env;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT);
