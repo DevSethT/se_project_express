@@ -6,6 +6,7 @@ const clothingRouter = require("./routes/clothingItems");
 
 const app = express();
 const { PORT = 3001 } = process.env;
+const { NOT_FOUND } = require("./utils/errors");
 
 app.use(express.json());
 
@@ -20,7 +21,7 @@ app.use("/users", userRouter);
 app.use("/items", clothingRouter);
 
 app.use("/*", (req, res) => {
-  res.status(404).send({ message: "Requested resource not found" });
+  res.status(NOT_FOUND).send({ message: "Requested resource not found" });
 });
 
 mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db").catch(() => {});
