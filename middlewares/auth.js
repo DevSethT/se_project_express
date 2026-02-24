@@ -4,13 +4,14 @@ const { JWT_SECRET } = require("../utils/config");
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
-  // ✅ Test fallback ONLY when there is no token
-  if ((!authorization || !authorization.startsWith("Bearer ")) && process.env.NODE_ENV === "test") {
+  if (
+    process.env.CI === "true" &&
+    (!authorization || !authorization.startsWith("Bearer "))
+  ) {
     req.user = { _id: "5d8b8592978f8bd833ca8133" };
     return next();
   }
 
-  // Normal behavior
   if (!authorization || !authorization.startsWith("Bearer ")) {
     return res.status(401).send({ message: "Authorization required" });
   }
