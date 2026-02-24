@@ -20,13 +20,11 @@ const login = (req, res) => {
   }
 
   return User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
-        expiresIn: "7d",
-      });
-
-      return res.send({ token });
-    })
+    .then((user) =>
+      res.send({
+        token: jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "7d" }),
+      })
+    )
     .catch((err) => {
       if (err.message === "Invalid email or password") {
         return res
@@ -39,8 +37,7 @@ const login = (req, res) => {
         .send({ message: "An error has occurred on the server." });
     });
 };
-
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res) =>
   User.findById(req.user._id)
     .orFail()
     .then((user) => res.send(user))
@@ -48,32 +45,28 @@ const getCurrentUser = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "User not found" });
       }
+
       return res.status(SERVER_ERROR).send({
         message: "An error has occurred on the server.",
       });
     });
-};
 
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
-  // Prevent bcrypt from running if required fields missing
   if (!name || !avatar || !email || !password) {
     return res.status(BAD_REQUEST).send({ message: "Invalid data" });
   }
 
-  bcrypt
+  return bcrypt
     .hash(password, 10)
     .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then((user) => {
       const userObj = user.toObject();
       delete userObj.password;
-
       return res.status(201).send(userObj);
     })
     .catch((err) => {
-      console.error(err);
-
       if (err.code === 11000) {
         return res.status(CONFLICT).send({ message: "Email already exists" });
       }
@@ -88,28 +81,27 @@ const createUser = (req, res) => {
     });
 };
 
-const updateProfile = (req, res) => {
-  const { name, avatar } = req.body;
-
+const updateProfile = (req, res) =>
   User.findByIdAndUpdate(
     req.user._id,
-    { name, avatar },
+    { name: req.body.name, avatar: req.body.avatar },
     { new: true, runValidators: true }
   )
     .orFail()
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === "ValidationError") {
-        return res.status(BAD_REQUEST).send({ message: err.message });
+        return res.status(BAD_REQUEST).send({ message: "Invalid data" });
       }
+
       if (err.name === "DocumentNotFoundError") {
         return res.status(NOT_FOUND).send({ message: "User not found" });
       }
+
       return res
         .status(SERVER_ERROR)
         .send({ message: "An error has occurred on the server." });
     });
-};
 
 module.exports = {
   createUser,

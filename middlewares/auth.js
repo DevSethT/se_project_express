@@ -5,14 +5,6 @@ const { UNAUTHORIZED } = require("../utils/errors");
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
-  if (
-    process.env.CI === "true" &&
-    (!authorization || !authorization.startsWith("Bearer "))
-  ) {
-    req.user = { _id: "5d8b8592978f8bd833ca8133" };
-    return next();
-  }
-
   if (!authorization || !authorization.startsWith("Bearer ")) {
     return res.status(UNAUTHORIZED).send({ message: "Authorization required" });
   }
@@ -20,8 +12,7 @@ module.exports = (req, res, next) => {
   const token = authorization.replace("Bearer ", "");
 
   try {
-    const payload = jwt.verify(token, JWT_SECRET);
-    req.user = payload;
+    req.user = jwt.verify(token, JWT_SECRET);
     return next();
   } catch (err) {
     return res.status(UNAUTHORIZED).send({ message: "Authorization required" });
