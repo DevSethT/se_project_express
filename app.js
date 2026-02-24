@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const routes = require("./routes");
 const { login, createUser } = require("./controllers/users");
-const clothingRouter = require("./routes/clothingItems");
 const authorization = require("./middlewares/auth");
 const { getItems } = require("./controllers/clothingItems");
 
