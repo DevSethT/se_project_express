@@ -5,6 +5,7 @@ const routes = require("./routes");
 const { login, createUser } = require("./controllers/users");
 const clothingRouter = require("./routes/clothingItems");
 const authorization = require("./middlewares/auth");
+const { getItems } = require("./controllers/clothingItems");
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -14,19 +15,9 @@ app.use(cors());
 app.post("/signin", login);
 app.post("/signup", createUser);
 
-app.use("/items", clothingRouter);
+app.get("/items", getItems);
 
-if (process.env.NODE_ENV === "test") {
-  app.use((req, res, next) => {
-    req.user = {
-      _id: "5d8b8592978f8bd833ca8133",
-    };
-    next();
-  });
-} else {
-  // In real usage, protect routes with JWT auth
-  app.use(authorization);
-}
+app.use(authorization);
 
 app.use(routes);
 
