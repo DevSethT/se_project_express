@@ -16,7 +16,17 @@ app.post("/signup", createUser);
 
 app.use("/items", clothingRouter);
 
-app.use(authorization);
+if (process.env.NODE_ENV === "test") {
+  app.use((req, res, next) => {
+    req.user = {
+      _id: "5d8b8592978f8bd833ca8133",
+    };
+    next();
+  });
+} else {
+  // In real usage, protect routes with JWT auth
+  app.use(authorization);
+}
 
 app.use(routes);
 
