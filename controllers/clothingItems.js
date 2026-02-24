@@ -1,6 +1,6 @@
 const ClothingItem = require("../models/clothingItem");
 
-const { BAD_REQUEST, NOT_FOUND, SERVER_ERROR } = require("../utils/errors");
+const { BAD_REQUEST, NOT_FOUND, SERVER_ERROR, FORBIDDEN } = require("../utils/errors");
 
 const getItems = (req, res) => {
   ClothingItem.find({})
@@ -37,8 +37,13 @@ const createItem = (req, res) => {
 const deleteItem = (req, res) => {
   ClothingItem.findById(req.params.itemId)
     .orFail()
-    .then((item) => item.deleteOne())
-    .then(() => res.send({ message: "Item deleted" }))
+    .then((item) => {
+      if (item.owner.toString() !== req.user._id) {
+        return res.status(FORBIDDEN).send({ message: "Forbidden" });
+      }
+
+      return item.deleteOne().then(() => res.send({ message: "Item deleted" }));
+    })
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {
