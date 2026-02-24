@@ -54,11 +54,10 @@ const getCurrentUser = (req, res) => {
     });
 };
 
-
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
-  // ✅ Prevent bcrypt from running if required fields missing
+  // Prevent bcrypt from running if required fields missing
   if (!name || !avatar || !email || !password) {
     return res.status(BAD_REQUEST).send({ message: "Invalid data" });
   }
@@ -113,8 +112,6 @@ const updateProfile = (req, res) => {
 };
 
 module.exports = {
-  getUsers,
-  getUser,
   createUser,
   login,
   getCurrentUser,
