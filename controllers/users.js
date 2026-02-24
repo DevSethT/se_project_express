@@ -1,12 +1,10 @@
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const {
   BAD_REQUEST,
   NOT_FOUND,
-  SERVER_ERROR,
-  CONFLICT,
-} = require("../utils/errors");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+  SERVER_ERROR,} = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
 
 const login = (req, res) => {
@@ -18,7 +16,7 @@ const login = (req, res) => {
       });
       res.send({ token });
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(401).send({ message: "Invallid email or password" });
     });
 };
