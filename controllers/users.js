@@ -10,10 +10,6 @@ const { JWT_SECRET } = require("../utils/config");
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    return next(new BadRequestError("Email and password are required"));
-  }
-
   return User.findUserByCredentials(email, password)
     .then((user) =>
       res.send({
@@ -42,10 +38,6 @@ const getCurrentUser = (req, res, next) =>
 
 const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
-
-  if (!name || !avatar || !email || !password) {
-    return next(new BadRequestError("Invalid data"));
-  }
 
   return bcrypt
     .hash(password, 10)
