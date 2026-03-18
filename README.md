@@ -32,4 +32,8 @@ REST API for the WTWR (What To Wear) application. Provides endpoints for managin
 - ESLint (Airbnb style guide)
 - Nodemon (dev hot reload)
 
-7c4537f4bde005d290cbaabb111601f1f8d1c57408bd638f6bbf8fececd65724
+-[link to live project](https://wtwr.teamradicus.com/)
+
+-[link to frontend](https://github.com/DevSethT/se_project_react)
+
+-[link to Video](https://youtu.be/Ea6jpcGxqUg)
