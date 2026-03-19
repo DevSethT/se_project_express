@@ -39,21 +39,27 @@ const getCurrentUser = (req, res, next) =>
 const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
-  return bcrypt
-    .hash(password, 10)
+  return User.findOne({ email })
+    .then((existingUser) => {
+      if (existingUser) {
+        throw new ConflictError("Email already exists");
+      }
+
+      return bcrypt.hash(password, 10);
+    })
     .then((hash) => User.create({ name, avatar, email, password: hash }))
     .then((user) => {
       const userObj = user.toObject();
       delete userObj.password;
-      return res.status(201).send(userObj);
+      res.status(201).send(userObj);
     })
     .catch((err) => {
-      if (err.code === 11000) {
-        return next(new ConflictError("Email already exists"));
-      }
-
       if (err.name === "ValidationError") {
         return next(new BadRequestError("Invalid data"));
+      }
+
+      if (err.code === 11000) {
+        return next(new ConflictError("Email already exists"));
       }
 
       return next(err);

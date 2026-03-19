@@ -34,6 +34,8 @@ REST API for the WTWR (What To Wear) application. Provides endpoints for managin
 
 -[link to live project](https://wtwr.teamradicus.com/)
 
+-[link for api](api.wtwr.teamradicus.com)
+
 -[link to frontend](https://github.com/DevSethT/se_project_react)
 
 -[link to Video](https://youtu.be/Ea6jpcGxqUg)
