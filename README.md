@@ -38,4 +38,6 @@ REST API for the WTWR (What To Wear) application. Provides endpoints for managin
 
 -[link to frontend](https://github.com/DevSethT/se_project_react)
 
--[link to Video](https://youtu.be/Ea6jpcGxqUg)
+-[link to demo Video](https://youtu.be/Ea6jpcGxqUg)
+
+-[Link to Project Pitch video](https://youtu.be/LKWPUu3sXZs)
